@@ -23,12 +23,18 @@ describe('gameStats', () => {
     expect(getHealthPercent(0)).toBe(100)
     expect(getHealthPercent(MAX_MOVES / 2)).toBe(50)
     expect(getHealthPercent(MAX_MOVES)).toBe(0)
+    expect(getHealthPercent(0, 0)).toBe(0)
   })
 
   it('loads best score from localStorage', () => {
     expect(loadBestScore()).toBeNull()
     window.localStorage.setItem(BEST_SCORE_STORAGE_KEY, '9')
     expect(loadBestScore()).toBe(9)
+  })
+
+  it.each(['invalid', '0', '-1'])('rejects invalid best score %s', (value) => {
+    window.localStorage.setItem(BEST_SCORE_STORAGE_KEY, value)
+    expect(loadBestScore()).toBeNull()
   })
 
   it('updates best score only when score improves', () => {
